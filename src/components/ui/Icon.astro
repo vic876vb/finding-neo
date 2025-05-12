@@ -1,0 +1,14 @@
+---
+import { iconWhitelist, type IconKey } from "@utils/iconMap.ts"
+import { Icon as AstroIcon } from 'astro-icon/components'
+import type { ComponentProps } from 'astro/types';
+
+type Props = Omit<ComponentProps<typeof AstroIcon>, 'name'> & {
+  name: IconKey
+}
+
+const { name, ...props } = Astro.props
+const iconName = iconWhitelist[name]
+---
+
+<AstroIcon name={iconName} {...props} fill="currentColor" />
