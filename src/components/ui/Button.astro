@@ -1,0 +1,26 @@
+---
+import type { IconKey } from '@utils/iconMap'
+import type { HTMLAttributes } from 'astro/types'
+import Icon from './Icon.astro'
+
+type Props = HTMLAttributes<'button'> & {
+  icon?: IconKey
+  iconClass?: string
+}
+
+const {icon, iconClass, ...props} = Astro.props;
+
+if (props.type === undefined || props.type === null) {
+	props.type = 'button';
+}
+
+if (props.type !== 'button' && props.type !== 'submit' && props.type !== 'reset') {
+  throw new Error(`Invalid button type: ${props.type}. Must be one of 'button', 'submit', or 'reset'.`);
+}
+
+---
+
+<button {...props}>
+  {icon && <Icon name={icon} class={iconClass} />}
+  <slot />
+</button>
