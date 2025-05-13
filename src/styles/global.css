@@ -1,2 +1,9 @@
 @import "tailwindcss";
 @import "flowbite";
+
+@theme {
+  --font-display: "Mulish", var(--default-font-family);
+  
+  --color-dark: oklch(9.69% 0 0);
+  --color-light: oklch(95.28% 0.005 78.3);
+}

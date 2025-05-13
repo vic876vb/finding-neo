@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="size-full">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -10,22 +10,7 @@
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro Basics</title>
 	</head>
-	<body>
+  <body class="bg-light dark:bg-dark dark:text-gray-500 size-full font-display text-gray-700">
 		<slot />
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-
-  body {
-    font-family: "Mulish", sans-serif;
-    background-color: #f3f4f6;
-    color: #111827;
-  }
-</style>

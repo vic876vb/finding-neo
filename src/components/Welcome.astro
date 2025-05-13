@@ -1,11 +1,9 @@
 ---
-import background from "../assets/background.svg"
 import LostPetView from "./LostPetView.astro"
 ---
 
-<div id="container">
-  <img id="background" src={background.src} alt="" fetchpriority="high" />
-  <main>
+<div id="container" class="h-full">
+  <main class="flex justify-center h-full">
     <section>
       <!-- <h1>I lost my dog</h1>
 			<p>This page was open via QR code on dog collar</p>
@@ -30,26 +28,3 @@ import LostPetView from "./LostPetView.astro"
     </section>
   </main>
 </div>
-
-<style>
-  #background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    filter: blur(100px);
-  }
-
-  #container {
-    font-family: Inter, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial, sans-serif;
-    height: 100%;
-  }
-
-  main {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-  }
-</style>

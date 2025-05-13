@@ -3,31 +3,33 @@ import { Image } from "astro:assets"
 import Button from "./ui/Button.astro"
 import Icon from "./ui/Icon.astro"
 import placeholderImage from "../assets/placeholder-dog.jpg"
+import BackgroundGradient from "./ui/BackgroundGradient.astro"
 
 const imageWidth = 500
 ---
 
 <article
   style={{ "--radius": "48px" }}
-  class="grid rounded-[var(--radius)] border-2 border-slate-500/50 bg-black p-6 text-slate-200 shadow-lg outline outline-black/5"
+  class="grid relative overflow-hidden rounded-[var(--radius)] border-2 border-slate-500/50 p-6 outline outline-black/5 shadow-2xl m-2"
 >
+  <BackgroundGradient />
   <figure
     style={{ "--image-width": `${imageWidth}px` }}
     class="gap-2 sm:gap-6 portrait:flex portrait:flex-col landscape:grid landscape:grid-cols-[min(calc(var(--image-width)/1.5),_40%)_auto]"
   >
     <span class="landscape:row-start-1 landscape:row-end-3 relative text-center">
-      <span class="absolute top-2 left-2 rounded-[calc(var(--radius)/4))] bg-slate-900 px-2.5 py-2 leading-none font-bold uppercase">
+      <span class="absolute top-2 left-2 rounded-[calc(var(--radius)/4))] bg-slate-900 text-gray-300 px-2.5 py-2 leading-none font-bold uppercase text-shadow-2xs">
         Lost
       </span>
       <Image
-        class="aspect-[inherit] w-full rounded-[calc(var(--radius)/2))] object-cover object-center shadow-lg"
+        class="aspect-[inherit] w-full rounded-[calc(var(--radius)/2))] object-cover object-center shadow-2xl"
         src={placeholderImage}
         alt="Finding Neo"
         fetchpriority={"high"}
         loading={"eager"}
       />
       <span
-        class="mx-auto -mt-3 inline-flex items-center gap-1.5 rounded-2xl bg-red-500 px-4 py-1.5 text-center text-slate-100 portrait:mb-1.5"
+        class="mx-auto -mt-3 inline-flex items-center gap-1.5 rounded-2xl bg-red-500 px-4 py-1.5 text-center text-slate-100 portrait:mb-1.5 shadow-lg"
       >
         <Icon name="location" class="w-4 h-4" />
         2h ago Barcelona
@@ -35,8 +37,8 @@ const imageWidth = 500
     </span>
 
     <figcaption class="grow landscape:col-start-2 landscape:row-start-1 space-y-2">
-      <h1 class="text-slate-100 portrait:text-4xl landscape:text-5xl mb-1 font-extrabold">Neo</h1>
-      <div class="landscape:text-lg tracking-tight text-gray-500">
+      <h1 class="portrait:text-4xl landscape:text-5xl text-shadow-sm dark:text-slate-200 text-slate-900 mb-1 font-extrabold">Neo</h1>
+      <div class="landscape:text-lg tracking-tight">
         <p class="md:col-start-2">
           <span class="gap-x-1 inline-flex items-center">
             Weimaraner
@@ -62,7 +64,7 @@ const imageWidth = 500
       </div>
     </figcaption>
 
-    <p>
+    <p class="dark:text-slate-200 text-slate-700">
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum, labore iure, in doloremque enim molestiae voluptate vel possimus quasi
       vitae praesentium facere quo optio est cum ad vero omnis. Maxime!
     </p>
