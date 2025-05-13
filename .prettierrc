@@ -1,4 +1,17 @@
 {
+  "semi": false,
+  "trailingComma": "none",
+  "endOfLine": "auto",
+  "tabWidth": 2,
+  "useTabs": false,
+  "htmlWhitespaceSensitivity": "ignore",
+  "printWidth": 140,
+  "proseWrap": "never",
+  "html": {
+    "format": {
+      "wrapLineLength": 140
+    }
+  },
   "plugins": ["prettier-plugin-astro", "prettier-plugin-tailwindcss"],
   "overrides": [
     {
