@@ -1,0 +1,87 @@
+---
+import { Image } from "astro:assets"
+import Button from "./ui/Button.astro"
+import Icon from "./ui/Icon.astro"
+import placeholderImage from "../assets/placeholder-dog.jpg"
+
+const imageWidth = 500
+---
+
+<article
+  style={{ "--radius": "48px" }}
+  class="grid rounded-[var(--radius)] border-2 border-slate-500/50 bg-black p-6 text-slate-200 shadow-lg outline outline-black/5"
+>
+  <figure
+    style={{ "--image-width": `${imageWidth}px` }}
+    class="gap-2 sm:gap-6 portrait:flex portrait:flex-col landscape:grid landscape:grid-cols-[min(calc(var(--image-width)/1.5),_40%)_auto]"
+  >
+    <span class="landscape:row-start-1 landscape:row-end-3 relative text-center">
+      <span class="absolute top-2 left-2 rounded-[calc(var(--radius)/4))] bg-slate-900 px-2.5 py-2 leading-none font-bold uppercase">
+        Lost
+      </span>
+      <Image
+        class="aspect-[inherit] w-full rounded-[calc(var(--radius)/2))] object-cover object-center shadow-lg"
+        src={placeholderImage}
+        alt="Finding Neo"
+        fetchpriority={"high"}
+        loading={"eager"}
+      />
+      <span
+        class="mx-auto -mt-3 inline-flex items-center gap-1.5 rounded-2xl bg-red-500 px-4 py-1.5 text-center text-slate-100 portrait:mb-1.5"
+      >
+        <Icon name="location" class="w-4 h-4" />
+        2h ago Barcelona
+      </span>
+    </span>
+
+    <figcaption class="grow landscape:col-start-2 landscape:row-start-1 space-y-2">
+      <h1 class="text-slate-100 portrait:text-4xl landscape:text-5xl mb-1 font-extrabold">Neo</h1>
+      <div class="landscape:text-lg tracking-tight text-gray-500">
+        <p class="md:col-start-2">
+          <span class="gap-x-1 inline-flex items-center">
+            Weimaraner
+            <Icon name="male" />
+          </span>
+        </p>
+        <p class="not-landscape:text-sm md:col-start-2">
+          <span class="gap-x-1 inline-flex items-center">
+            <Icon name="calendar" /> 1.5 years old
+          </span>
+        </p>
+        <p class="not-landscape:text-sm md:col-start-2 inline-flex">
+          <span class="gap-x-1 inline-flex items-center">
+            <Icon name="weight" />
+            22,2 kg
+          </span>
+          <span class="mr-1.5 ml-2">|</span>
+          <span class="gap-x-1 inline-flex items-center">
+            <Icon name="height" />
+            52 cm
+          </span>
+        </p>
+      </div>
+    </figcaption>
+
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum, labore iure, in doloremque enim molestiae voluptate vel possimus quasi
+      vitae praesentium facere quo optio est cum ad vero omnis. Maxime!
+    </p>
+
+    <div class="portrait:px-1 flex col-start-2 my-4 space-x-4">
+      <Button class={"btn-primary-squared"} icon="phone" iconClass="w-5 h-5" />
+      <Button class={"btn-primary-squared"} icon="whatsapp" iconClass="w-5 h-5" />
+      <Button class={"btn-primary-squared"} icon="telegram" iconClass="w-5 h-5" />
+    </div>
+  </figure>
+  <!-- <footer class="mt-2">
+					<p class="mt-4 text-center">VECTOR</p>
+				</footer> -->
+</article>
+
+<style>
+  @reference "@styles/global.css";
+
+  button.btn-primary-squared {
+    @apply flex aspect-square size-12 items-center justify-center rounded-xl bg-gray-800 p-3 text-sm font-medium text-white hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800;
+  }
+</style>
