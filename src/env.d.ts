@@ -1,4 +1,5 @@
 interface ImportMetaEnv {
+  readonly PUBLIC_URL: string
   readonly CONTENTFUL_DELIVERY_API_URL: string
   readonly CONTENTFUL_MANAGEMENT_API_URL: string
   readonly CONTENTFUL_SPACE_ID: string

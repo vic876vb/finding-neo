@@ -4,13 +4,22 @@ import Button from "./ui/Button.astro"
 import Icon from "./ui/Icon.astro"
 import placeholderImage from "../assets/placeholder-dog.jpg"
 import BackgroundGradient from "./ui/BackgroundGradient.astro"
+import { getEntry } from "@/lib/contentful/contentful-client"
+import type { TypePetSkeleton } from "@/types/generated"
 
 const imageWidth = 500
+const slug = "neo--victor.hernandezn@outlook.com"
+
+const entry = await getEntry<TypePetSkeleton>(slug, "pet")
+const { data, error } = entry
+// TODO: handle error
+console.log("entry", entry)
+const { name, breed, birthDate, height, heightUnit, length, lengthUnit, weight, weightUnit, description, companion } = data || {}
 ---
 
 <article
   style={{ "--radius": "48px" }}
-  class="grid relative overflow-hidden rounded-[var(--radius)] border-2 border-slate-500/50 p-6 outline outline-black/5 shadow-2xl m-2"
+  class="relative m-2 grid overflow-hidden rounded-[var(--radius)] border-2 border-slate-500/50 p-6 shadow-2xl outline outline-black/5"
 >
   <BackgroundGradient />
   <figure
@@ -18,7 +27,9 @@ const imageWidth = 500
     class="gap-2 sm:gap-6 portrait:flex portrait:flex-col landscape:grid landscape:grid-cols-[min(calc(var(--image-width)/1.5),_40%)_auto]"
   >
     <span class="landscape:row-start-1 landscape:row-end-3 relative text-center">
-      <span class="absolute top-2 left-2 rounded-[calc(var(--radius)/4))] bg-slate-900 text-gray-300 px-2.5 py-2 leading-none font-bold uppercase text-shadow-2xs">
+      <span
+        class="absolute top-2 left-2 rounded-[calc(var(--radius)/4))] bg-slate-900 px-2.5 py-2 leading-none font-bold text-gray-300 uppercase text-shadow-2xs"
+      >
         Lost
       </span>
       <Image
@@ -29,7 +40,7 @@ const imageWidth = 500
         loading={"eager"}
       />
       <span
-        class="mx-auto -mt-3 inline-flex items-center gap-1.5 rounded-2xl bg-red-500 px-4 py-1.5 text-center text-slate-100 portrait:mb-1.5 shadow-lg"
+        class="mx-auto -mt-3 inline-flex items-center gap-1.5 rounded-2xl bg-red-500 px-4 py-1.5 text-center text-slate-100 shadow-lg portrait:mb-1.5"
       >
         <Icon name="location" class="w-4 h-4" />
         2h ago Barcelona
@@ -37,38 +48,43 @@ const imageWidth = 500
     </span>
 
     <figcaption class="grow landscape:col-start-2 landscape:row-start-1 space-y-2">
-      <h1 class="portrait:text-4xl landscape:text-5xl text-shadow-sm dark:text-slate-200 text-slate-900 mb-1 font-extrabold">Neo</h1>
+      <h1 class="text-slate-900 text-shadow-sm portrait:text-4xl landscape:text-5xl dark:text-slate-200 mb-1 font-extrabold">{name}</h1>
       <div class="landscape:text-lg tracking-tight">
         <p class="md:col-start-2">
           <span class="gap-x-1 inline-flex items-center">
-            Weimaraner
+            {breed}
             <Icon name="male" />
           </span>
         </p>
         <p class="not-landscape:text-sm md:col-start-2">
           <span class="gap-x-1 inline-flex items-center">
-            <Icon name="calendar" /> 1.5 years old
+            <Icon name="calendar" />
+            {birthDate} years old
           </span>
         </p>
         <p class="not-landscape:text-sm md:col-start-2 inline-flex">
           <span class="gap-x-1 inline-flex items-center">
             <Icon name="weight" />
-            22,2 kg
+            {weight}
+            {weightUnit}
           </span>
           <span class="mr-1.5 ml-2">|</span>
           <span class="gap-x-1 inline-flex items-center">
             <Icon name="height" />
-            52 cm
+            {height}
+            {heightUnit}
+          </span>
+          <span class="mr-1.5 ml-2">|</span>
+          <span class="gap-x-1 inline-flex items-center">
+            <Icon name="length" />
+            {length}
+            {lengthUnit}
           </span>
         </p>
       </div>
     </figcaption>
-
-    <p class="dark:text-slate-200 text-slate-700">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum, labore iure, in doloremque enim molestiae voluptate vel possimus quasi
-      vitae praesentium facere quo optio est cum ad vero omnis. Maxime!
-    </p>
-
+    <p class="text-slate-700 dark:text-slate-200" set:html={description} />
+    <!-- {companion.item.entry.fields} -->
     <div class="portrait:px-1 flex col-start-2 my-4 space-x-4">
       <Button class={"btn-primary-squared"} icon="phone" iconClass="w-5 h-5" />
       <Button class={"btn-primary-squared"} icon="whatsapp" iconClass="w-5 h-5" />
