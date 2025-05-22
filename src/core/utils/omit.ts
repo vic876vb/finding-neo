@@ -1,3 +1,5 @@
+import { deleteNestedProperty } from "./nested"
+
 export function shallowOmit<T extends object, K extends keyof T>(obj: T, ...keys: K[]): Omit<T, K> {
   const copy = { ...obj }
   for (const key of keys) {
@@ -9,7 +11,9 @@ export function shallowOmit<T extends object, K extends keyof T>(obj: T, ...keys
 export function deepOmit<T extends object, K extends keyof T>(obj: T, ...keys: K[]): Omit<T, K> {
   const clone = structuredClone(obj)
   for (const key of keys) {
-    delete clone[key]
+    // delete clone[key]
+
+    deleteNestedProperty(clone, String(key).split("."))
   }
   return clone
 }

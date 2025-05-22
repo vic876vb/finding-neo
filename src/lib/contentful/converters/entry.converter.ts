@@ -16,23 +16,23 @@ export function transform<T extends EntrySkeletonType>(entry: Entry<T>): Transfo
     console.warn(`Invalid entry ${JSON.stringify(entry)}. Entry was not transformed.`)
     return { value: entry, success }
   }
+  const copy = structuredClone(entry)
 
-  const transformed: TransformedEntry<T> = deepFlatten(entry, "fields")
   Object.keys(entry.fields).forEach((key) => {
-    const value = transformed[key]
+    const value = copy.fields[key]
     if (!value) return
     if (typeof value === "object") {
       if (Array.isArray(value)) {
-        Object.assign(transformed, { [key]: value.map((item) => (typeof item === "object" ? transform(item as Entry<T>).value : item)) })
+        Object.assign(copy, { [key]: value.map((item) => (typeof item === "object" ? transform(item as Entry<T>).value : item)) })
       } else if (isRichText(value)) {
-        Object.assign(transformed, { [key]: transformRichText(value as Document) })
+        Object.assign(copy, { [key]: transformRichText(value as Document) })
       } else if ((value as any)?.sys.type) {
         switch ((value as any)?.sys.type) {
           case "Entry":
-            Object.assign(transformed, { [key]: transform(value as Entry<any>).value })
+            Object.assign(copy, { [key]: transform(value as Entry<any>).value })
             break
           case "Asset":
-            Object.assign(transformed, { [key]: transformAsset(value as Asset) })
+            Object.assign(copy, { [key]: transformAsset(value as Asset) })
             break
           default:
             console.warn("TODO: unhandled case", key, value) // TODO: use ReferenceConverter
@@ -43,12 +43,14 @@ export function transform<T extends EntrySkeletonType>(entry: Entry<T>): Transfo
   })
 
   success = true
-
-  return { value: transformed, success }
+  // TODO: omit metadata
+  return { value: deepFlatten(copy, "fields"), success }
 }
 
 export function isValid<T extends EntrySkeletonType>(entry: Entry<T>): entry is Entry<T> {
   if (!entry) return false
+  const res = entry.sys !== undefined
+  // console.log("Entry", entry, res)
 
-  return entry.sys !== undefined && entry.fields !== undefined && entry.metadata !== undefined
+  return res
 }
