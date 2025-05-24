@@ -3,6 +3,7 @@ import type { Asset, Entry, EntrySkeletonType } from "contentful"
 import { isRichText, transform as transformRichText } from "./rich-text.converter"
 import { transform as transformAsset } from "./asset.converter"
 import { deepFlatten } from "@utils/flatten"
+import { deepPick } from "@utils/pick"
 
 export type TransformedEntry<T extends EntrySkeletonType> = Omit<Entry<T>, "fields"> & T["fields"]
 export type TransformResult<T extends EntrySkeletonType> = {
@@ -16,7 +17,8 @@ export function transform<T extends EntrySkeletonType>(entry: Entry<T>): Transfo
     console.warn(`Invalid entry ${JSON.stringify(entry)}. Entry was not transformed.`)
     return { value: entry, success }
   }
-  const copy = structuredClone(entry)
+
+  const copy = deepPick(entry, "sys.id", "sys.type", "sys.contentType", "fields")
 
   Object.keys(entry.fields).forEach((key) => {
     const value = copy.fields[key]
@@ -43,14 +45,12 @@ export function transform<T extends EntrySkeletonType>(entry: Entry<T>): Transfo
   })
 
   success = true
-  // TODO: omit metadata
+
   return { value: deepFlatten(copy, "fields"), success }
 }
 
 export function isValid<T extends EntrySkeletonType>(entry: Entry<T>): entry is Entry<T> {
   if (!entry) return false
-  const res = entry.sys !== undefined
-  // console.log("Entry", entry, res)
 
-  return res
+  return entry.sys !== undefined && entry.sys.type === "Entry"
 }

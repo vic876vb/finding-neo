@@ -1,4 +1,5 @@
-import { deleteNestedProperty, getNestedProperty } from "./nested"
+import { deepMerge } from "./merge"
+import { getDeepProperty, isDeepKey, type DeepKey } from "./nested"
 
 export function shallowPick<T extends object, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {
   const copy = {} as Pick<T, K>
@@ -10,36 +11,16 @@ export function shallowPick<T extends object, K extends keyof T>(obj: T, ...keys
   return copy
 }
 
-// export function deepPick<T extends object, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {
-//   const clone = structuredClone(obj)
-//   const picked = {} as Pick<T, K>
-//   for (const key of keys) {
-//     if (key in clone) {
-//       picked[key] = getNestedProperty(clone, String(key).split("."))
-//     }
-//   }
-//   return picked
-// }
-
-// TODO: fix deepPick
-export function deepPick<T extends object, K extends keyof T | string>(
-  obj: T,
-  ...keys: K[]
-): Pick<T, Extract<K, keyof T>> & Record<string, any> {
-  const result: any = {}
+export function deepPick<T extends object>(obj: T, ...keys: DeepKey<T>[]): Pick<T, keyof T & string> {
+  const clone = structuredClone(obj)
+  const picked = {} as Pick<T, keyof T>
   for (const key of keys) {
-    const path = String(key).split(".")
-    const picked = getNestedProperty(obj, path)
-    console.log(`picked`, picked)
-
-    if (picked !== undefined) {
-      // Deep merge the picked value into result
-      let target = result
-      for (let i = 0; i < path.length - 1; i++) {
-        target = target[path[i]] ??= {}
-      }
-      target[path[path.length - 1]] = picked
+    if (isDeepKey(clone, key)) {
+      const path = String(key).split(".")
+      const outerKey = path[0]
+      const innerValue = (getDeepProperty(clone, path) as Record<string, unknown>)[outerKey]
+      deepMerge(picked, { [outerKey]: innerValue })
     }
   }
-  return result
+  return picked
 }
