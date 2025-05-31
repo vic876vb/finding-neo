@@ -1,0 +1,20 @@
+---
+import { getEntry } from "@/lib/contentful/contentful-client"
+import type { TypePetSkeleton } from "@/types/generated"
+import LostPetView from "@/components/LostPetView.astro"
+import LostPetLayout from "@/layouts/LostPetLayout.astro"
+
+export const prerender = false
+
+const { slug } = Astro.params
+if (!slug) return Astro.redirect("/404")
+
+const entry = await getEntry<TypePetSkeleton>(slug, "pet")
+const { data, error } = entry
+// TODO: handle error
+if (error) return Astro.redirect("/404")
+---
+
+<LostPetLayout>
+  <LostPetView data={data} />
+</LostPetLayout>

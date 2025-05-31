@@ -1,6 +1,6 @@
-import { deepOmit } from "@utils/omit"
-import type { Flatten } from "@utils/flatten" // Assuming Flatten is { ...T, ...T[K] } & Omit<T, K>
-import { shallowPick } from "@utils/pick"
+import { deepOmit } from "@/utils/omit"
+import type { Flatten } from "@/utils/flatten"
+import { shallowPick } from "@/utils/pick"
 import type { Asset, AssetFile, BaseSys, EntryFields } from "contentful"
 
 // TransformedAsset should be a flat object with specific properties from Asset and AssetFile

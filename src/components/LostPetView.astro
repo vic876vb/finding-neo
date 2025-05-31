@@ -4,27 +4,161 @@ import Button from "./ui/Button.astro"
 import Icon from "./ui/Icon.astro"
 import placeholderImage from "../assets/placeholder-dog.jpg"
 import BackgroundGradient from "./ui/BackgroundGradient.astro"
-import { getEntry } from "@/lib/contentful/contentful-client"
 import type { TypePetSkeleton } from "@/types/generated"
+import type { TransformedEntry } from "@/lib/contentful/converters/entry.converter"
+import { getLocalizationKeys } from "@/i18n/index"
+
+type Props = {
+  data: TransformedEntry<TypePetSkeleton> | undefined
+}
+
+const { data } = Astro.props
+const { name, breed, birthDate, height, heightUnit, length, lengthUnit, weight, weightUnit, description, companion, image } = data || {}
+const t = getLocalizationKeys()
 
 const imageWidth = 500
-const slug = "neo--victor.hernandezn@outlook.com"
-
-const entry = await getEntry<TypePetSkeleton>(slug, "pet")
-const { data, error } = entry
-// TODO: handle error
-console.log("entry", entry)
-const { name, breed, birthDate, height, heightUnit, length, lengthUnit, weight, weightUnit, description, companion } = data || {}
+const cardPadding = 6 * 0.25
+const buttonSize = 5
 ---
 
 <article
+  style={{ "--radius": "48px", "--image-width": `${imageWidth}px`, "--card-padding": `${cardPadding}rem` }}
+  class={`relative m-2 max-w-[calc(100svw-32px)] overflow-hidden min-w-[min(calc(var(--image-width)/1.5),_40%)] rounded-[var(--radius)] border-2 border-slate-500/50 p-[var(--card-padding)] shadow-2xl outline outline-black/5`}
+>
+  <BackgroundGradient />
+  <figure
+    class="gap-2 sm:gap-6 portrait:flex portrait:flex-col landscape:grid landscape:grid-cols-[min(calc(var(--image-width)/1.5),_40%)_auto]"
+  >
+    <span class="landscape:row-start-1 landscape:row-end-3 relative text-center">
+      <span
+        class="absolute top-2 left-2 rounded-[calc(var(--radius)/4))] bg-slate-900 px-2.5 py-2 leading-none font-bold text-gray-300 uppercase text-shadow-2xs"
+      >
+        {t["LOST_TAG"]}
+      </span>
+      <img
+        class="aspect-[inherit] w-full rounded-[calc(var(--radius)/2))] object-cover object-center shadow-2xl/80"
+        src={image?.url || ""}
+        alt={image?.title || "Lost Pet Image"}
+        fetchpriority={"high"}
+        loading={"eager"}
+      />
+      <span
+        class="mx-auto -mt-3 inline-flex items-center gap-1.5 rounded-2xl bg-red-500 px-4 py-1.5 text-center text-slate-100 shadow-lg/20 portrait:mb-1.5"
+      >
+        <Icon name="location" class="w-4 h-4" />
+        2h ago Barcelona
+      </span>
+    </span>
+
+    <figcaption class="grow landscape:col-start-2 landscape:row-start-1 space-y-2">
+      <h1 class="text-slate-900 text-shadow-sm portrait:text-4xl landscape:text-5xl dark:text-slate-200 mb-1 font-extrabold">{name}</h1>
+      <div class="landscape:text-lg tracking-tight">
+        <p class="md:col-start-2">
+          <span class="gap-x-1 inline-flex items-center">
+            {breed}
+            <Icon name="male" />
+          </span>
+        </p>
+        <p class="not-landscape:text-sm md:col-start-2">
+          <span class="gap-x-1 inline-flex items-center">
+            <Icon name="calendar" />
+            {birthDate} years old
+          </span>
+        </p>
+        <p class="not-landscape:text-sm md:col-start-2 inline-flex">
+          <span class="gap-x-1 inline-flex items-center">
+            <Icon name="weight" />
+            {weight}
+            {weightUnit}
+          </span>
+          <span class="mr-1.5 ml-2">|</span>
+          <span class="gap-x-1 inline-flex items-center">
+            <Icon name="height" />
+            {height}
+            {heightUnit}
+          </span>
+          <span class="mr-1.5 ml-2">|</span>
+          <span class="gap-x-1 inline-flex items-center">
+            <Icon name="length" />
+            {length}
+            {lengthUnit}
+          </span>
+        </p>
+      </div>
+    </figcaption>
+    <p class="text-slate-700 dark:text-slate-200" set:html={description} />
+    <div class="relative flex items-center col-start-2 my-4">
+      <div
+        class={`fade-left absolute top-0 -left-[var(--card-padding)] z-10 w-[calc(var(--card-padding)+0.5rem)] h-full pointer-events-none`}
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class={`fade-right absolute top-0 -right-[var(--card-padding)] z-10 w-[calc(var(--card-padding)+0.5rem)] h-full pointer-events-none`}
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        style="scrollbar-gutter: stable;"
+        class={`snap-mandatory snap-x scroll-px-${buttonSize} portrait:px-2 flex gap-4 py-3 overflow-x-auto`}
+      >
+        <a class={"btn-primary-squared snap-center"} href={`tel:${companion?.at(0)?.phone}`}>
+          <Icon name="phone" class={`w-${buttonSize} h-${buttonSize}`} />
+        </a>
+        <a class={"btn-primary-squared snap-center"} href={`sms:${companion?.at(0)?.phone}`}>
+          <Icon name="message" class={`w-${buttonSize} h-${buttonSize}`} />
+        </a>
+        <a class={"btn-primary-squared snap-center"} href={`mailto:${companion?.at(0)?.email}`}>
+          <Icon name="email" class={`w-${buttonSize} h-${buttonSize}`} />
+        </a>
+        <a class={"btn-primary-squared snap-center"} href={`https://wa.me/${companion?.at(0)?.phone}`}>
+          <Icon name="whatsapp" class={`w-${buttonSize} h-${buttonSize}`} />
+        </a>
+        <a class={"btn-primary-squared snap-center"} href={`https://t.me/${companion?.at(0)?.phone}`}>
+          <Icon name="telegram" class={`w-${buttonSize} h-${buttonSize}`} />
+        </a>
+        <a class={"btn-primary-squared snap-center"} href={`https://t.me/${companion?.at(0)?.phone}`}>
+          <Icon name="telegram" class={`w-${buttonSize} h-${buttonSize}`} />
+        </a>
+        <a class={"btn-primary-squared snap-center"} href={`https://t.me/${companion?.at(0)?.phone}`}>
+          <Icon name="telegram" class={`w-${buttonSize} h-${buttonSize}`} />
+        </a>
+        <!-- ...other buttons... -->
+      </div>
+    </div>
+    <!-- <div style="scrollbar-gutter: stable;" class="scroll-px-4 portrait:px-1 flex col-start-2 pb-4 my-4 space-x-4 overflow-x-auto">
+      <a class={"btn-primary-squared"} href={`tel:${companion?.at(0)?.phone}`}>
+        <Icon name="phone" class="w-5 h-5" />
+      </a>
+      <a class={"btn-primary-squared"} href={`sms:${companion?.at(0)?.phone}`}>
+        <Icon name="message" class="w-5 h-5" />
+      </a>
+      <a class={"btn-primary-squared"} href={`mailto:${companion?.at(0)?.email}`}>
+        <Icon name="email" class="w-5 h-5" />
+      </a>
+      <a class={"btn-primary-squared"} href={`https://wa.me/${companion?.at(0)?.phone}`}>
+        <Icon name="whatsapp" class="w-5 h-5" />
+      </a>
+      <a class={"btn-primary-squared"} href={`https://t.me/${companion?.at(0)?.phone}`}>
+        <Icon name="telegram" class="w-5 h-5" />
+      </a>
+      <a class={"btn-primary-squared"} href={`https://t.me/${companion?.at(0)?.phone}`}>
+        <Icon name="telegram" class="w-5 h-5" />
+      </a>
+      <a class={"btn-primary-squared"} href={`https://t.me/${companion?.at(0)?.phone}`}>
+        <Icon name="telegram" class="w-5 h-5" />
+      </a>
+    </div> -->
+  </figure>
+</article>
+<!-- <article
   style={{ "--radius": "48px" }}
-  class="relative m-2 grid overflow-hidden rounded-[var(--radius)] border-2 border-slate-500/50 p-6 shadow-2xl outline outline-black/5"
+  class="relative m-2 grid rounded-[var(--radius)] border-2 border-slate-500/50 p-6 shadow-2xl outline outline-black/5"
 >
   <BackgroundGradient />
   <figure
     style={{ "--image-width": `${imageWidth}px` }}
-    class="gap-2 sm:gap-6 portrait:flex portrait:flex-col landscape:grid landscape:grid-cols-[min(calc(var(--image-width)/1.5),_40%)_auto]"
+    class="gap-2 overflow-x-hidden sm:gap-6 portrait:flex portrait:flex-col landscape:grid landscape:grid-cols-[min(calc(var(--image-width)/1.5),_40%)_auto]"
   >
     <span class="landscape:row-start-1 landscape:row-end-3 relative text-center">
       <span
@@ -32,10 +166,10 @@ const { name, breed, birthDate, height, heightUnit, length, lengthUnit, weight, 
       >
         Lost
       </span>
-      <Image
+      <img
         class="aspect-[inherit] w-full rounded-[calc(var(--radius)/2))] object-cover object-center shadow-2xl"
-        src={placeholderImage}
-        alt="Finding Neo"
+        src={image?.url || ""}
+        alt={image?.title || "Lost Pet Image"}
         fetchpriority={"high"}
         loading={"eager"}
       />
@@ -84,22 +218,42 @@ const { name, breed, birthDate, height, heightUnit, length, lengthUnit, weight, 
       </div>
     </figcaption>
     <p class="text-slate-700 dark:text-slate-200" set:html={description} />
-    <!-- {companion.item.entry.fields} -->
-    <div class="portrait:px-1 flex col-start-2 my-4 space-x-4">
-      <Button class={"btn-primary-squared"} icon="phone" iconClass="w-5 h-5" />
-      <Button class={"btn-primary-squared"} icon="whatsapp" iconClass="w-5 h-5" />
-      <Button class={"btn-primary-squared"} icon="telegram" iconClass="w-5 h-5" />
+    <div class="scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 h-32">
+      <div class="h-64"></div>
+    </div>
+    <div class="scroll-px-4 portrait:px-1 flex col-start-2 my-4 space-x-4">
+      <a class={"btn-primary-squared"} href={`tel:${companion?.at(0)?.phone}`}>
+        <Icon name="phone" class="w-5 h-5" />
+      </a>
+      <a class={"btn-primary-squared"} href={`sms:${companion?.at(0)?.phone}`}>
+        <Icon name="message" class="w-5 h-5" />
+      </a>
+      <a class={"btn-primary-squared"} href={`mailto:${companion?.at(0)?.email}`}>
+        <Icon name="email" class="w-5 h-5" />
+      </a>
+      <a class={"btn-primary-squared"} href={`https://wa.me/${companion?.at(0)?.phone}`}>
+        <Icon name="whatsapp" class="w-5 h-5" />
+      </a>
+      <a class={"btn-primary-squared"} href={`https://t.me/${companion?.at(0)?.phone}`}>
+        <Icon name="telegram" class="w-5 h-5" />
+      </a>
+      <a class={"btn-primary-squared"} href={`https://t.me/${companion?.at(0)?.phone}`}>
+        <Icon name="telegram" class="w-5 h-5" />
+      </a>
+      <a class={"btn-primary-squared"} href={`https://t.me/${companion?.at(0)?.phone}`}>
+        <Icon name="telegram" class="w-5 h-5" />
+      </a>
     </div>
   </figure>
-  <!-- <footer class="mt-2">
+</article> -->
+<!-- <footer class="mt-2">
 					<p class="mt-4 text-center">VECTOR</p>
 				</footer> -->
-</article>
 
 <style>
-  @reference "@styles/global.css";
+  @reference "@/styles/global.css";
 
-  button.btn-primary-squared {
+  .btn-primary-squared {
     @apply flex aspect-square size-12 items-center justify-center rounded-xl bg-gray-800 p-3 text-sm font-medium text-white hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800;
   }
 </style>

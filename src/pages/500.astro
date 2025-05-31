@@ -1,0 +1,21 @@
+---
+import HtmlLayout from "@/layouts/HtmlLayout.astro"
+import MainLayout from "@/layouts/MainLayout.astro"
+
+interface Props {
+  error: unknown
+}
+
+const { error } = Astro.props
+---
+
+<HtmlLayout title="Oops - Internal Server Error">
+  <MainLayout>
+    <div class="flex flex-col items-center justify-center h-screen text-center">
+      <h1 class="mb-4 text-6xl font-bold">500 - Internal Server Error</h1>
+      <p class="mb-8 text-lg">Sorry, something went wrong on our end.</p>
+      <p>{error instanceof Error ? error.message : "Unknown error"}</p>
+      <a href="/" class="hover:underline text-blue-500">Go back to Home</a>
+    </div>
+  </MainLayout>
+</HtmlLayout>

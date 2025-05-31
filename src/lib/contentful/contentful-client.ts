@@ -9,6 +9,8 @@ import {
   type EntryFieldsSubsetFilters
 } from "contentful"
 import { transform as transformEntry, type TransformedEntry } from "./converters/entry.converter"
+import type { TypeLocalizationKeySkeleton } from "@/types/generated"
+import { transformAll as transformAllKeys, type LocalizationEntry } from "./converters/localization-keys.converter"
 
 type FetchResult<T> = {
   data?: T | undefined
@@ -53,6 +55,26 @@ export async function getEntry<T extends EntrySkeletonType>(
     const { value, success } = transformEntry(entry)
     if (!success) return { error: `Could not transform entry with id: "${slug}"` }
     return { data: value }
+  } catch (error: any) {
+    return { error }
+  }
+}
+
+export async function getLocalizationKeys(): Promise<FetchResult<LocalizationEntry>> {
+  try {
+    const entries = await client.getEntries<TypeLocalizationKeySkeleton>({
+      content_type: "localizationKey",
+      select: ["fields"]
+    })
+
+    const transformed = transformAllKeys(entries.items)
+    // ((entry) => {
+    //   const { value, success } = transformEntry(entry)
+    //   if (!success) throw new Error(`Could not transform entry with id: "${entry.sys.id}"`)
+    //   return value
+    // })
+
+    return { data: transformed }
   } catch (error: any) {
     return { error }
   }

@@ -5,9 +5,12 @@ export const iconWhitelist = {
   male: "round-male",
   female: "round-female",
   weight: "round-weight",
-  height: "round-height",
+  height: "flowbite:arrow-up-down-solid",
+  length: "flowbite:arrow-right-arrow-left-solid",
   calendar: "round-calendar",
   telegram: "brands/telegram",
-} as const;
+  email: "flowbite:envelope-solid",
+  message: "flowbite:messages-solid"
+} as const
 
-export type IconKey = keyof typeof iconWhitelist;
+export type IconKey = keyof typeof iconWhitelist
